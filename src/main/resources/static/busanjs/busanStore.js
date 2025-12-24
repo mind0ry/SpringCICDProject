@@ -1,7 +1,26 @@
 const {defineStore} = Pinia
-
-const useBusanStore = defineStore('busan',{
-	// 공통 적용
+/*
+    Vue.createApp({
+		= state
+		data(){
+			return {
+				
+			}
+		},
+		= actions 
+		methods:{
+			
+		},
+		= 각페이지 처리 => onMounted(()=>{
+			
+		})
+		mounted(){
+			
+		}
+	})
+*/
+const useBusanStore=defineStore('busan',{
+	// 공통 적용 변수 => 중복 : commons 
 	state:()=>({
 		list:[],
 		curpage:1,
@@ -9,17 +28,20 @@ const useBusanStore = defineStore('busan',{
 		startPage:0,
 		endPage:0,
 		type:1,
-		detail:{}
+		detail:{
+			vo:{},
+			list:[]
+		}
 	}),
 	// 기능 설정 => axios => BASE_URL
 	actions:{
-		// 목록 => 페이지 처리
-		async busanListData(type) {
+		// 목록 => 페이지 처리 
+		async busanListData(type){
 			this.type=type
-			const res=await axios.get('http://localhost:9090/busan/list_vue/', {
-				params: {
-					page: this.curpage,
-					type: this.type
+			const res=await axios.get('http://localhost:8080/busan/list_vue/',{
+				params:{
+					page:this.curpage,
+					type:this.type
 				}
 			})
 			console.log(res.data)
@@ -30,20 +52,38 @@ const useBusanStore = defineStore('busan',{
 			this.endPage=res.data.endPage
 			this.type=res.data.type
 		},
-		// 페이징
-		pageChange(page) {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+		// 페이징 
+		prev(page){
 			this.curpage=page
 			this.busanListData(this.type)
 		},
-		range(start,end) {
+		next(page){
+			this.curpage=page
+		    this.busanListData(this.type)
+		},
+		pageChange(page){
+			this.curpage=page
+			this.busanListData(this.type)
+		},
+		range(start,end){
 			let arr=[]
 			let len=end-start
-			for(let i=0;i<=len;i++) {
-				arr.push(start) // arr[i]=start
+			for(let i=0;i<=len;i++)
+			{
+				arr[i]=start // arr[i]=start
 				start++
 			}
 			return arr
-		}
-		// 상세보기 
+		},
+		// 상세보기
+		async busanDetailData(no){
+			const res=await axios.get('http://localhost:8080/busan/detail_vue/',{
+				params:{
+					no:no
+				}
+			})
+			console.log(res.data)
+			this.detail=res.data 
+		} 
 	}
 })
