@@ -1,22 +1,12 @@
-package com.sist.web.mapper;
+package com.sist.web.service;
 
-import java.util.*;
+import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
-import org.springframework.stereotype.Repository;
+import com.sist.web.vo.FoodVO;
 
-import com.sist.web.vo.*;
-
-@Mapper
-@Repository
-public interface FoodMapper {
-	
-	public List<FoodVO> foodNearData4(String address);
-	
-	@Select("SELECT fno,name,poster "
+public interface FoodService {
+	/*
+	 * @Select("SELECT fno,name,poster "
 			+ "FROM menupan_food "
 			+ "ORDER BY fno ASC "
 			+ "OFFSET #{start} ROWS FETCH NEXT 12 ROWS ONLY")
@@ -36,16 +26,10 @@ public interface FoodMapper {
 	@Select("SELECT CEIL(COUNT(*)/12.0) FROM menupan_food "
 			+ "WHERE address LIKE '%'||#{address}||'%'")
 	public int foodFindTotalPage(String address);
-	
-	// 상세보기
-	@Update("UPDATE menupan_food SET "
-			+ "hit=hit+1 "
-			+ "WHERE fno=#{fno}")
-	public void foodHitIncrement(int fno);
-	
-	@Select("SELECT fno,name,poster,address,phone,type,"
-			+ "time,parking,score,theme,content "
-			+ "FROM menupan_food "
-			+ "WHERE fno=#{fno}")
+	 */
+	public List<FoodVO> foodListData(int start);
+	public int foodTotalPage();
+	public List<FoodVO> foodFindData(int start, String address);
+	public int foodFindTotalPage(String address);
 	public FoodVO foodDetailData(int fno);
 }
